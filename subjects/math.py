@@ -1,6 +1,9 @@
-from context import subjects
+from .context import subjects
+from .context import users
 from discord.ext import commands
 import discord
+
+math_ranks = ['math', 'math level 1', 'math level 2']
 
 math_questions = {
     'What is 3^5?': '243',
@@ -18,17 +21,45 @@ class Math(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.quest = None
-    
+        self.ans = None
+
     @commands.Cog.listener()
     async def on_ready(self):
         print('Math online.')
     
+    @commands.command()
     async def math(self, ctx):
         """A math question."""
         
-        self.quest = subjects.get_quest_answer(math_questions)[0]
+        quest_answer = subjects.get_quest_answer(math_questions)
+
+        self.quest = quest_answer[0]
+        self.ans = quest_answer[1]
 
         await ctx.send(self.quest)
+    
+    @commands.command()
+    async def answer(self, ctx, ans):
+        """Answers a math question."""
+
+        author_id = ctx.author.id
+
+        if not users.is_user(author_id):
+            await ctx.send('You are not signed up for any subject. :x:')
+
+        if self.ans == ans.lower():
+            users.users[author_id]['points'] += 1
+
+            if users.users[author_id]['points'] == 15:
+                subjects.level_up(author_id, math_ranks)
+
+                await ctx.send(f'Congrats, you are now in {users.users[author_id]["subject"]}! :white_check_mark:')
+
+            else:
+                await ctx.send(f'Congrats, you got it right. You now have {users.users[author_id]["points"]} points! :white_check_mark:')
+
+        else:
+            await ctx.send('Sad, your answer was incorrect! :x:')
 
 
 def setup(client):
