@@ -20,8 +20,6 @@ math_questions = {
 class Math(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.quest = None
-        self.ans = None
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -31,15 +29,17 @@ class Math(commands.Cog):
     async def math(self, ctx):
         """A math question."""
         
-        quest_answer = subjects.get_quest_answer(math_questions)
+        user = users.users[ctx.author.id]
 
-        self.quest = quest_answer[0]
-        self.ans = quest_answer[1]
+        quest_answer = subjects.get_quest_answer(ctx.author.id, math_questions)
 
-        await ctx.send(self.quest)
+        user['quest'] = quest_answer[0]
+        user['answer'] = quest_answer[1]
+        
+        await ctx.send(user['quest'])
     
     @commands.command()
-    async def answer(self, ctx, ans):
+    async def answer_math(self, ctx, ans):
         """Answers a math question."""
 
         author_id = ctx.author.id
@@ -47,11 +47,11 @@ class Math(commands.Cog):
         if not users.is_user(author_id):
             await ctx.send('You are not signed up for any subject. :x:')
 
-        if self.ans == ans.lower():
+        if users.users[ctx.author.id]['ans'] == ans.lower():
             users.users[author_id]['points'] += 1
 
-            if users.users[author_id]['points'] == 15:
-                subjects.level_up(author_id, math_ranks)
+            if users.users[author_id]['points'] == subjects.MAX_POINTS:
+                subjects.level_up(author_id, users.users[author_id]['subject-ranks'])
 
                 await ctx.send(f'Congrats, you are now in {users.users[author_id]["subject"]}! :white_check_mark:')
 
