@@ -1,7 +1,6 @@
 from lib import users
 from lib import subjects
 
-from subjects.math import math_ranks
 from discord.ext import commands
 import discord
 import json
@@ -75,14 +74,15 @@ async def join(ctx, subject):
 
 @client.command()
 async def answer(ctx, ans):
-    """Answers a math question."""
+    """Answers a question."""
  
     author_id = ctx.author.id
-    user = users.users[author_id]
 
     if not users.is_user(author_id):
         await ctx.send('You are not signed up for any subject. :x:')
     
+    user = users.users[author_id]
+
     if user['quest'] is None:
         await ctx.send('You have no question. :x:')
 
@@ -92,11 +92,11 @@ async def answer(ctx, ans):
 
         if user['points'] == subjects.MAX_POINTS:
             
-            subjects.level_up(author_id, user['subject-ranks'])
+            subjects.level_up(author_id)
 
             user['quest'] = None
 
-            await ctx.send(f'Congrats, you are now in {user["subject"]}! :white_check_mark:')
+            await ctx.send(f'Congrats, you are now in {user["subject-level"]}! :white_check_mark:')
 
         else:
             

@@ -11,6 +11,7 @@ def new_user(id_, name, subject, subject_ranks):
     users[id_] = {
         'username': name,
         'subject': subject,
+        'subject-level': subject,
         'subject-ranks': subject_ranks,
         'points': 0,
         'major-points': 0,

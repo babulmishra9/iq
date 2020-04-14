@@ -1,46 +1,51 @@
 from . import users
-import random
+import json
 
-random = random.SystemRandom()
+subjects = ['math', 'astronomy', 'biology', 'chemistry', 'geograpy', 'physics', 'tech']
 
-subjects = ['math', 'astronomy']
-
-ranks = {
-    'math': ['math', 'math level 1', 'math level 2']
-}
+ranks = json.load(open('./data/ranks.json'))
 
 MAX_POINTS = 8
 
 
-def get_quest_answer(id_, dict):
+def get_quest_answer(id_):
     """Returns the question and the answer in a list."""
 
-    points = users.users[id_]['points']
-    
-    questions = list(dict.keys())
+    user = users.users[id_]
+    subject = user['subject']
 
-    question = questions[points]
-    answer = dict[question]
+    # The dictionary containing all the questions and their answers.
+    quest_answers = ranks[subject][user['subject-level']]['questions']
+    
+    questions = list(quest_answers.keys())
+
+    question = questions[user['points']]
+    answer = quest_answers[question]
     
     return [question, answer]
 
 
-def level_up(id_, ranks):
-    major_points = users.users[id_]['major-points']
+def level_up(id_):
+    user = users.users[id_]
+    subject = user['subject']
 
+    major_points = user['major-points']
     major_points += 1
 
-    users.users[id_]['subject'] = ranks[major_points]
+    user['points'] = 0
+
+    user['subject-level'] = ranks[subject][subject + '_ranks'][major_points]
 
 
-def get_ranks(id_=None, user_subject=None):
+def get_ranks(id_=None, user_subject=None, level=None):
     if user_subject:
         for subject in ranks.keys():
             if user_subject == subject:
-                return ranks[subject]
+                return ranks[subject][subject + '_ranks']
 
-    user = users.users[id_]
+    if id_:
+        user = users.users[id_]
 
-    for subject in ranks.keys():
-        if user['subject'] == subject:
-            return ranks[subject]
+        for subject in ranks.keys():
+            if user['subject'] == subject:
+                return ranks[subject][subject + '_ranks']
