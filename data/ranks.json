@@ -1,0 +1,205 @@
+{
+   "math":{
+      "math_ranks":[
+         "math",
+         "math level 2",
+         "math level 3"
+      ],
+      "math":{
+         "questions":{
+            "What is 3^5?":"243",
+            "20 % of 2 is equal to?":"0.4",
+            "What\\'s sin(90 deg)?":"1",
+            "What\\'s 90 deg in radians?":"1.57",
+            "If 15% of x is 45,what is 20% of x?":"60",
+            "What is the value of the expression: 2^2 - 3^2 + 4^2":"11",
+            "Is this: 3x^2 - 4x + 12 = 9 considered an equation?":"yes",
+            "What\\'s sin(1.57 deg)?":"0.03"
+         }
+      },
+      "math level 2":{
+         "questions":{
+            "v = [5, 8]\nWhat\\'s v scaled by to give [15, 24]?":"3",
+            "What\\'s the range of the following set of data: 12, -2, 9, 3, 2.4, 7.1, 11?":"14",
+            "Find the square root of 3^2 * 4^4?":"48"
+         }
+      },
+      "math level 3":{
+         "questions":{
+
+         }
+      }
+   },
+   "astronomy":{
+      "astronomy_ranks":[
+         "astronomy",
+         "astronomy level 2",
+         "astronomy level 3"
+      ],
+      "astronomy":{
+         "questions":{
+            "What kind of star is our sun?":"g2",
+            "Is our sun white, red, orange or blue?":"white",
+            "How hot is the surface of the sun in celsius?":"5505",
+            "How many moons does Jupiter have?":"79",
+            "is Alpha Centauri a and b twins?":"yes",
+            "Which of Jupiter's moons is the biggest?":"ganymede"
+         }
+      },
+      "astronomy level 2":{
+         "questions":{
+
+         }
+      },
+      "astronomy level 3":{
+         "questions":{
+
+         }
+      }
+   },
+   "biology":{
+      "biology_ranks":[
+         "biology",
+         "biology level 2",
+         "biology level 3"
+      ],
+      "biology":{
+         "questions":{
+            "Which blood group is called the \"universal donor\"?":"o-",
+            "From what plant was paper originally made?":"papyrus",
+            "How much blood is in the human body in liters?":"5,7",
+            "How many basic tastes can humans sense?":"5",
+            "How many taste buds do young people have?":"100000",
+            "How many facial muscles are involved in speaking?":"70",
+            "What is the word for a person with very pale skin and eyes?":"albino",
+            "What sensory function do the ears provide other than hearing?":"balance"
+         }
+      },
+      "biology level 2":{
+         "questions":{
+
+         }
+      },
+      "biology level 3":{
+         "questions":{
+
+         }
+      }
+   },
+   "chemistry":{
+      "chemistry_ranks":[
+         "chemistry",
+         "chemistry level 2",
+         "chemistry level 3"
+      ],
+      "chemistry":{
+         "questions":{
+            "What is the first element on the periodic table?":"hydrogen",
+            "What is the centre of an atom called?":"nucleus",
+            "true or false? Acids have a pH level below 7.":"true",
+            "What is the main gas found in the air we breathe?":"nitrogen",
+            "True or false? An electron carries a positive charge.":"false",
+            "What is the chemical symbol for gold?":"au",
+            "K is the chemical symbol for which element?":"potassium",
+            "What is the most common isotope of hydrogen?":"protium"
+         }
+      },
+      "chemistry level 2":{
+         "questions":{
+
+         }
+      },
+      "chemistry level 3":{
+         "questions":{
+
+         }
+      }
+   },
+   "geograpy":{
+      "geograpy_ranks":[
+         "geograpy",
+         "geograpy level 2",
+         "geograpy level 3"
+      ],
+      "geograpy":{
+         "questions":{
+            "What\\'s the capital city in Italy?":"rome",
+            "What\\'s the second largest country in Japan by population?":"osaka",
+            "What\\'s the capital city in Japan":"tokyo",
+            "What\\'s Earth\\'s largest continent?":"asia",
+            "What river runs through Baghdad?":"tigris",
+            "What country has the most natural lakes?":"canada",
+            "What is the only sea without any coasts?":"sargasso sea",
+            "What percentage of the River Nile is located in Egypt?":"22%"
+         }
+      },
+      "geograpy level 2":{
+         "questions":{
+
+         }
+      },
+      "geograpy level 3":{
+         "questions":{
+
+         }
+      }
+   },
+   "physics":{
+      "physics_ranks":[
+         "physics",
+         "physics level 2",
+         "physics level 3"
+      ],
+      "physics":{
+         "questions":{
+            "Does time go faster at the top of a building compared to the bottom?":"yes",
+            "If I hammered and flattened a penny enough, could I cover the entire earth with it?":"no",
+            "If I'm on an elevator that breaks loose and plummets down the shaft, can I avoid harm by jumping at the last second?":"yes",
+            "Can air make shadows?":"yes",
+            "What\\'s Einsteins most famous equation?":"e=mc^2",
+            "Nuclear sizes are expressed in a unit named":"fermi",
+            "Light from the Sun reaches us in nearly (answer in minutes)":"8",
+            "Light year is a unit of":"distance"
+         }
+      },
+      "physics level 2":{
+         "questions":{
+
+         }
+      },
+      "physics level 3":{
+         "questions":{
+
+         }
+      }
+   },
+   "tech":{
+      "tech_ranks":[
+         "tech",
+         "tech level 2",
+         "tech level 3"
+      ],
+      "tech":{
+         "questions":{
+            "How many bits for a byte?":"8",
+            "Operating system is also called?":"os",
+            "Which browser is the most-used browser?": "chrome",
+            "Computers calculate numbers in what mode?":"binary",
+            "Kilobyte, megabyte, gigabyte, terabyte... What next?":"petabyte",
+            "Is LOS a programming language?":"no",
+            "true or false? C is a programming language":"true",
+            "Other word for \"restart\"?":"reboot"
+         }
+      },
+      "tech level 2":{
+         "questions":{
+
+         }
+      },
+      "tech level 3":{
+         "questions":{
+
+         }
+      }
+   }
+}
