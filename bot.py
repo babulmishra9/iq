@@ -1,5 +1,6 @@
 from lib import users
 from lib import subjects
+from lib import files
 
 from discord.ext import commands
 import discord
@@ -11,13 +12,7 @@ TOKEN = json.load(open('token.json'))
 client = commands.Bot(command_prefix='iq ')
 
 # Handles cogs.
-for filename in os.listdir('./subjects'):
-    if filename.endswith('.py'):
-        if filename == '__init__.py' or filename == 'context.py':
-            pass
-
-        else:
-            client.load_extension(f'subjects.{filename[:-3]}')
+files.load_subjects(client, load_all=True)
 
 
 @client.event
@@ -53,7 +48,7 @@ async def join(ctx, subject):
 
             old_subject = user['subject']
 
-            user['subject'] = subject
+            users.new_user(author_id, author_name, subject, subjects.get_ranks(user_subject=subject))
 
             if old_subject == subject:
                 await ctx.send(f'You are already in the {subject} subject. :x:')
@@ -109,6 +104,113 @@ async def answer(ctx, ans):
         user['quest'] = None
 
         await ctx.send('Sad, your answer was incorrect! :x:')
+
+
+@client.command()
+@commands.has_role('.')
+async def new_subject(ctx, name):
+    """Makes a new subject."""
+
+    name = name.lower()
+
+    if os.path.exists(f'subjects/{name}.py'):
+        await ctx.send('Subject already exists. :x:')
+
+    else:
+        subjects.subjects.append(name)
+
+        subjects.ranks[name] = {
+            name + '_ranks': [name, name + ' level 2', name + ' level 3'],
+
+            name: {
+                'questions': {}
+            },
+
+            name + ' level 2': {
+                'questions': {}
+            },
+
+            name + ' level 3': {
+                'questions': {}
+            },
+        }
+
+        # Writes the new subject.
+        files.new_subject_file(name, subjects.sbj_code(name))
+
+        # Updates every file in data/
+        files.update_data()
+
+        await ctx.send(f'Successfully made subject \'{name}\'! :white_check_mark:')
+
+
+@client.command()
+@commands.has_role('.')
+async def add_quest(ctx, subject, level, question, answer):
+    """Adds a question to a specific subject."""
+
+    subject = subject.lower()
+    
+    if int(level) > 3 or int(level) < 1:
+        await ctx.send('IQ only supports level 1, 2 and 3. :x:')
+
+    if subject in subjects.ranks.keys():
+        subject_dict = subjects.ranks[subject]
+        
+        if int(level) == 1:
+            subject_dict[subject]['questions'][question.replace('"', '')] = answer
+
+            files.update_data()
+
+            try:
+                files.load_subjects(client, load=subject)
+            except Exception:
+                pass
+
+
+            await ctx.send(f"The question was successfully added to the {subject} subject! :white_check_mark:")
+
+        else:
+            for level_name in subject_dict.keys():
+                if level in level_name:
+                    subject_dict[level_name]['questions'][question.replace('"', '')] = answer
+                    
+                    files.update_data()
+                    
+                    try:
+                        files.load_subjects(client, load=subject)
+                    except Exception:
+                        pass
+
+                    await ctx.send(f"The question was successfully added to the {subject} subject! :white_check_mark:")
+    
+    else:
+        await ctx.send(f"Subject '{subject}' is not a valid subject. :x:")
+
+
+@client.command()
+@commands.has_role('.')
+async def remove_subject(ctx, subject):
+    """Removes a subject."""
+
+    subject = subject.lower()
+
+    if subject in subjects.ranks.keys():
+        # Removes the subject from the dictionary.
+        del subjects.ranks[subject.lower()]
+
+        # Removes the subject from the list.
+        subjects.subjects.remove(subject)
+
+        # Updates the files.
+        files.update_data()
+
+        os.remove(f'subjects/{subject}.py')
+
+        await ctx.send(f'Successfully removed subject \'{subject}\'! :white_check_mark:')
+    
+    else:
+        await ctx.send(f'Subject \'{subject}\' is not a valid subject. :x:')
 
 
 client.run(TOKEN)

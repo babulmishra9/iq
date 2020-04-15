@@ -8,6 +8,9 @@ def is_user(id_):
 
 
 def new_user(id_, name, subject, subject_ranks):
+    if is_user(id_):
+        del users[id_]
+
     users[id_] = {
         'username': name,
         'subject': subject,

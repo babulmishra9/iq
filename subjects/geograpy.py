@@ -4,30 +4,35 @@ from discord.ext import commands
 import discord
 
 
-class Geography(commands.Cog):
+class Geograpy(commands.Cog):
     def __init__(self, client):
         self.client = client
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print('Geography online.')
+        print('Geograpy online.')
 
     @commands.command()
-    async def geography(self, ctx):
-        """A geography question."""
+    async def geograpy(self, ctx):
+        """A geograpy question."""
 
-        if not users.is_user:
+        if not users.is_user(ctx.author.id):
             await ctx.send('You are not signed up for any subject. :x:')
 
-        user = users.users[ctx.author.id]
+        if users.users[ctx.author.id]['subject'] != 'geograpy':
+            await ctx.send('You are not joined geograpy. :x:')
 
-        quest_answer = subjects.get_quest_answer(ctx.author.id)
+        else:
+            user = users.users[ctx.author.id]
 
-        user['quest'] = quest_answer[0]
-        user['answer'] = quest_answer[1]
+            quest_answer = subjects.get_quest_answer(ctx.author.id)
 
-        await ctx.send(user['quest'])
+            user['quest'] = quest_answer[0]
+            user['answer'] = quest_answer[1]
+
+            await ctx.send(user['quest'])
+
 
 
 def setup(client):
-    client.add_cog(Geography(client))
+    client.add_cog(Geograpy(client))
