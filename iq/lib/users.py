@@ -1,10 +1,12 @@
-users = {}
+from . import files
+import json
 
+users = json.load(open('data/users.json'))
 
 def is_user(id_):
     """Checks if a user is new or old."""
 
-    return id_ in users.keys()
+    return str(id_) in users.keys()
 
 
 def new_user(id_, name, subject, subject_ranks):
@@ -21,3 +23,5 @@ def new_user(id_, name, subject, subject_ranks):
         'quest': None,
         'answer': None,
     }
+
+    files.update_users()

@@ -36,7 +36,7 @@ async def unload(ctx, extension):
 async def join(ctx, subject):
     """Joins a subject."""
 
-    author_id = ctx.author.id
+    author_id = str(ctx.author.id)
     author_name = ctx.author.name
 
     subject = subject.lower()
@@ -48,12 +48,15 @@ async def join(ctx, subject):
 
             old_subject = user['subject']
 
-            users.new_user(author_id, author_name, subject, subjects.get_ranks(user_subject=subject))
-
             if old_subject == subject:
                 await ctx.send(f'You are already in the {subject} subject. :x:')
 
-            elif old_subject is not None:
+                return 
+
+            else:
+                users.new_user(author_id, author_name, subject, subjects.get_ranks(user_subject=subject))
+
+            if old_subject:
                 await ctx.send(f'{author_name}, you have joined {subject} and left {old_subject}. :white_check_mark:')
 
             else:
@@ -71,7 +74,7 @@ async def join(ctx, subject):
 async def answer(ctx, ans):
     """Answers a question."""
 
-    author_id = ctx.author.id
+    author_id = str(ctx.author.id)
 
     if not users.is_user(author_id):
         await ctx.send('You are not signed up for any subject. :x:')
@@ -90,18 +93,25 @@ async def answer(ctx, ans):
             subjects.level_up(author_id)
 
             user['quest'] = None
+            user['answer'] = None
 
             await ctx.send(f'Congrats, you are now in {user["subject-level"]}! :white_check_mark:')
 
         else:
 
             user['quest'] = None
+            user['answer'] = None
 
             await ctx.send(f'Congrats, you got it right. You now have {user["points"]} points! :white_check_mark:')
+
+        files.update_users()
 
     else:
 
         user['quest'] = None
+        user['answer'] = None
+
+        files.update_users()
 
         await ctx.send('Sad, your answer was incorrect! :x:')
 

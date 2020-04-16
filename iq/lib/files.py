@@ -1,4 +1,5 @@
 from . import subjects
+from . import users
 import json
 import os
 
@@ -28,3 +29,8 @@ def load_subjects(client, load_all=False, load=None):
             
     elif load:
         client.load_extension(f'subjects.{load}')
+
+
+def update_users():
+    with open('data/users.json', 'w') as f:
+        json.dump(users.users, f, indent=4)

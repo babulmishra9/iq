@@ -1,10 +1,11 @@
-from .context import subjects   
-from .context import users      
+from .context import subjects
+from .context import users
+from .context import files
 from discord.ext import commands
 import discord
 
 
-class Math(commands.Cog):       
+class Math(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -19,19 +20,22 @@ class Math(commands.Cog):
         if not users.is_user(ctx.author.id):
             await ctx.send('You are not signed up for any subject. :x:')
 
-        if users.users[ctx.author.id]['subject'] != 'math':
+        elif users.users[str(ctx.author.id)]['subject'] != 'math':      
             await ctx.send('You are not joined math. :x:')
 
         else:
-            user = users.users[ctx.author.id]
+            id_ = str(ctx.author.id)
 
-            quest_answer = subjects.get_quest_answer(ctx.author.id)
+            user = users.users[id_]
+
+            quest_answer = subjects.get_quest_answer(id_)
 
             user['quest'] = quest_answer[0]
             user['answer'] = quest_answer[1]
 
-            await ctx.send(user['quest'])
+            files.update_users()
 
+            await ctx.send(user['quest'])
 
 
 def setup(client):
