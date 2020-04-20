@@ -1,9 +1,9 @@
 from . import users
 import json
 
-subjects = json.load(open('./data/subjects.json'))
+subjects = json.load(open('./data/subjects.json', 'w'))
 
-ranks = json.load(open('./data/ranks.json'))
+ranks = json.load(open('./data/ranks.json', 'w'))
 
 MAX_POINTS = 8
 
