@@ -1,1 +1,0 @@
-worker: python iq/bot.py

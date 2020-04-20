@@ -9,3 +9,5 @@ You can [invite iq](https://discordapp.com/oauth2/authorize?client_id=6986392998
 ## Documentation
 Documentation will be found in the `docs/` folder.
 
+## Authors
+[vsp](https://github.com/vsp0) - Head-Developer
