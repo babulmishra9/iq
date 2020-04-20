@@ -1,5 +1,8 @@
 token.json
 __pycache__/
+iq/token.json
+iq/data/users.json
+iq/testing.py
 .vscode
 testing.py
 write_me.py
