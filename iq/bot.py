@@ -1,18 +1,13 @@
-from lib import users
+from lib import custom_subjects
 from lib import subjects
-from lib import files
-
+from lib import users
 from discord.ext import commands
 import discord
 import json
-import os
 
 TOKEN = json.load(open('token.json'))
 
 client = commands.Bot(command_prefix='iq ')
-
-# Handles cogs.
-files.load_subjects(client, load_all=True)
 
 
 @client.event
@@ -41,7 +36,7 @@ async def join(ctx, subject):
 
     subject = subject.lower()
 
-    if subject in subjects.subjects:
+    if subject in custom_subjects.subjects:
 
         if users.is_user(author_id):
             user = users.users[author_id]
@@ -70,6 +65,26 @@ async def join(ctx, subject):
     else:
         await ctx.send(f'{subject}, is not a valid subject. :x:')
 
+
+@client.command()
+async def question(ctx):
+    """Sends a question."""
+
+    if not users.is_user(ctx.author.id):
+        await ctx.send('You are not signed up for any subject. :x:')
+
+    else:
+        id_ = str(ctx.author.id)
+
+        user = users.users[id_]
+
+        quest_answer = user['subject-class'].get_quest_answer(id_)
+
+        user['quest'] = quest_answer[0]
+        user['answer'] = quest_answer[1]
+
+        await ctx.send(user['quest'])
+
 @client.command()
 async def answer(ctx, ans):
     """Answers a question."""
@@ -88,7 +103,7 @@ async def answer(ctx, ans):
 
         user['points'] += 1
 
-        if user['points'] == subjects.MAX_POINTS:
+        if user['points'] == user['subject-class'].quest_per_level:
 
             subjects.level_up(author_id)
 
@@ -104,54 +119,34 @@ async def answer(ctx, ans):
 
             await ctx.send(f'Congrats, you got it right. You now have {user["points"]} points! :white_check_mark:')
 
-        files.update_users()
-
     else:
 
         user['quest'] = None
         user['answer'] = None
-
-        files.update_users()
 
         await ctx.send('Sad, your answer was incorrect! :x:')
 
 
 @client.command()
 @commands.has_role('iq.admin')
-async def new_subject(ctx, name):
+async def new_subject(ctx, name, levels, quest_per_level):
     """Makes a new subject."""
 
     name = name.lower()
-
-    if os.path.exists(f'subjects/{name}.py'):
+    
+    if name in custom_subjects.subjects.keys():
         await ctx.send('Subject already exists. :x:')
-
+    
     else:
-        subjects.subjects.append(name)
+        levels = int(levels)
+        quest_per_level = int(quest_per_level)
 
-        subjects.ranks[name] = {
-            name + '_ranks': [name, name + ' level 2', name + ' level 3'],
+        subject = custom_subjects.Subject(name, levels, quest_per_level)
 
-            name: {
-                'questions': {}
-            },
+        custom_subjects.subjects[name] = subject
+        custom_subjects.quests[name] = subject.subject_dict
 
-            name + ' level 2': {
-                'questions': {}
-            },
-
-            name + ' level 3': {
-                'questions': {}
-            },
-        }
-
-        # Writes the new subject.
-        files.new_subject_file(name, subjects.sbj_code(name))
-
-        # Updates every file in data/
-        files.update_data()
-
-        await ctx.send(f'Successfully made subject \'{name}\'! :white_check_mark:')
+        await ctx.send(f'Successfully created subject \'{name}\' with {levels} levels and with {quest_per_level} questions per level. :white_check_mark:')
 
 
 @client.command()
@@ -160,42 +155,15 @@ async def add_quest(ctx, subject, level, question, answer):
     """Adds a question to a specific subject."""
 
     subject = subject.lower()
+    level = int(level)
 
-    if int(level) > 3 or int(level) < 1:
-        await ctx.send('IQ only supports level 1, 2 and 3. :x:')
+    if subject in custom_subjects.subjects.keys():
+        custom_subjects.subjects[subject].new_quest(level, question.replace('"', ''), answer)
 
-    if subject in subjects.ranks.keys():
-        subject_dict = subjects.ranks[subject]
-
-        if int(level) == 1:
-            subject_dict[subject]['questions'][question.replace('"', '')] = answer
-
-            files.update_data()
-
-            try:
-                files.load_subjects(client, load=subject)
-            except Exception:
-                pass
-
-
-            await ctx.send(f"The question was successfully added to the {subject} subject! :white_check_mark:")
-
-        else:
-            for level_name in subject_dict.keys():
-                if level in level_name:
-                    subject_dict[level_name]['questions'][question.replace('"', '')] = answer
-
-                    files.update_data()
-
-                    try:
-                        files.load_subjects(client, load=subject)
-                    except Exception:
-                        pass
-
-                    await ctx.send(f"The question was successfully added to the {subject} subject! :white_check_mark:")
+        await ctx.send(f"The question was successfully added to the {subject} subject! :white_check_mark:")
 
     else:
-        await ctx.send(f"Subject '{subject}' is not a valid subject. :x:")
+        await ctx.send(f"Subject {subject} does not exist. :x:")
 
 
 @client.command()
@@ -205,22 +173,14 @@ async def remove_subject(ctx, subject):
 
     subject = subject.lower()
 
-    if subject in subjects.ranks.keys():
+    if subject in custom_subjects.subjects.keys():
         # Removes the subject from the dictionary.
-        del subjects.ranks[subject.lower()]
+        del custom_subjects.subjects[subject.lower()]
 
-        # Removes the subject from the list.
-        subjects.subjects.remove(subject)
-
-        # Updates the files.
-        files.update_data()
-
-        os.remove(f'subjects/{subject}.py')
-
-        await ctx.send(f'Successfully removed subject \'{subject}\'! :white_check_mark:')
+        await ctx.send(f'Successfully removed the {subject} subject :white_check_mark:')
 
     else:
-        await ctx.send(f'Subject \'{subject}\' is not a valid subject. :x:')
+        await ctx.send(f"Subject {subject} does not exist. :x:")
 
 
 client.run(TOKEN)

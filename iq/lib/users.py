@@ -1,7 +1,7 @@
-from . import files
-import json
+from . import custom_subjects
 
-users = json.load(open('data/users.json'))
+users = {}
+
 
 def is_user(id_):
     """Checks if a user is new or old."""
@@ -16,6 +16,7 @@ def new_user(id_, name, subject, subject_ranks):
     users[id_] = {
         'username': name,
         'subject': subject,
+        'subject-class': custom_subjects.subjects[subject],
         'subject-level': subject,
         'subject-ranks': subject_ranks,
         'points': 0,
@@ -23,5 +24,3 @@ def new_user(id_, name, subject, subject_ranks):
         'quest': None,
         'answer': None,
     }
-
-    files.update_users()
