@@ -151,23 +151,6 @@ async def new_subject(ctx, name, levels, quest_per_level):
 
 @client.command()
 @commands.has_role('iq.admin')
-async def add_quest(ctx, subject, level, question, answer):
-    """Adds a question to a specific subject."""
-
-    subject = subject.lower()
-    level = int(level)
-
-    if subject in custom_subjects.subjects.keys():
-        custom_subjects.subjects[subject].new_quest(level, question.replace('"', ''), answer)
-
-        await ctx.send(f"The question was successfully added to the {subject} subject! :white_check_mark:")
-
-    else:
-        await ctx.send(f"Subject {subject} does not exist. :x:")
-
-
-@client.command()
-@commands.has_role('iq.admin')
 async def remove_subject(ctx, subject):
     """Removes a subject."""
 
@@ -178,6 +161,65 @@ async def remove_subject(ctx, subject):
         del custom_subjects.subjects[subject.lower()]
 
         await ctx.send(f'Successfully removed the {subject} subject :white_check_mark:')
+
+    else:
+        await ctx.send(f"Subject {subject} does not exist. :x:")
+
+
+@client.command()
+@commands.has_role('iq.admin')
+async def add_quest(ctx, subject, level, question, answer):
+    """Adds a question to a specific subject."""
+
+    question = question[1:-1]
+
+    subject = subject.lower()
+    level = int(level)
+    
+    if subject in custom_subjects.subjects.keys():
+        if level > custom_subjects.subjects[subject].levels:
+            await ctx.send(f'Max level is {custom_subjects.subjects[subject].levels}, not {level}. :x:')
+
+            return
+
+        quests_dict = custom_subjects.quests[subject][subject + ' level ' + str(level)]['questions']
+
+        if question in quests_dict.keys():
+            await ctx.send('Question already exist. :x:')
+
+        elif len(quests_dict.keys()) + 1 > custom_subjects.subjects[subject].quest_per_level:
+            await ctx.send(f'Too many questions in {subject}. {len(quests_dict.keys()) + 1} > {custom_subjects.subjects[subject].quest_per_level}. :x:')
+
+        else:
+            custom_subjects.subjects[subject].new_quest(level, question, answer)
+
+            await ctx.send(f"The question was successfully added to the {subject} subject! :white_check_mark:")
+
+    else:
+        await ctx.send(f"Subject {subject} does not exist. :x:")
+
+
+@client.command()
+@commands.has_role('iq.admin')
+async def remove_quest(ctx, subject, level, question):
+    """Removes a question from a specific subject."""
+
+    question = question[1:-1]
+
+    subject = subject.lower()
+    level = int(level)
+
+    if subject in custom_subjects.subjects.keys():
+        if level > custom_subjects.subjects[subject].levels:
+            await ctx.send(f'Max level is {custom_subjects.subjects[subject].levels}, not {level}. :x:')
+
+        elif question not in custom_subjects.quests[subject][subject + ' level ' + level]['questions'].keys():
+            await ctx.send('Question does not exist. :x:')
+
+        else:
+            custom_subjects.subjects[subject].rm_quest(level, question)
+
+            await ctx.send(f"The question was successfully removed from the {subject} subject! :white_check_mark:")
 
     else:
         await ctx.send(f"Subject {subject} does not exist. :x:")
