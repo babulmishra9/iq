@@ -26,5 +26,3 @@ def get_ranks(id_=None, user_subject=None, level=None):
         for subject in custom_subjects.quests.keys():
             if user['subject'] == subject:
                 return custom_subjects.quests[subject][subject + '_ranks']
-
-
