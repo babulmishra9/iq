@@ -24,7 +24,7 @@ add_quest <subject> <level> "<question>" <answer> - adds a question and it's ans
 
 remove_quest <subject> <level> "<question>" - removes a question and it's answer from a specific subject from a specific level.
 ```
-In `remove_quest` and `add_quest` the question parameter requires either double or singe quotes around it.
+In `remove_quest` and `add_quest` the question parameter requires double quotes around it.
 
 ## Authors
 [vsp](https://github.com/vsp0) - Head-Developer
