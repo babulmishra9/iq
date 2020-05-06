@@ -49,7 +49,7 @@ async def join(ctx, subject):
                 return 
 
             else:
-                users.new_user(author_id, author_name, subject, subjects.get_ranks(user_subject=subject))
+                users.new_user(author_id, author_name, subject + ' level 1', subjects.get_ranks(user_subject=subject + ' level 1'))
 
             if old_subject:
                 await ctx.send(f'{author_name}, you have joined {subject} and left {old_subject}. :white_check_mark:')
@@ -171,8 +171,6 @@ async def remove_subject(ctx, subject):
 async def add_quest(ctx, subject, level, question, answer):
     """Adds a question to a specific subject."""
 
-    question = question[1:-1]
-
     subject = subject.lower()
     level = int(level)
     
@@ -183,7 +181,7 @@ async def add_quest(ctx, subject, level, question, answer):
             return
 
         quests_dict = custom_subjects.quests[subject][subject + ' level ' + str(level)]['questions']
-
+        
         if question in quests_dict.keys():
             await ctx.send('Question already exist. :x:')
 
@@ -204,8 +202,6 @@ async def add_quest(ctx, subject, level, question, answer):
 async def remove_quest(ctx, subject, level, question):
     """Removes a question from a specific subject."""
 
-    question = question[1:-1]
-
     subject = subject.lower()
     level = int(level)
 
@@ -213,7 +209,7 @@ async def remove_quest(ctx, subject, level, question):
         if level > custom_subjects.subjects[subject].levels:
             await ctx.send(f'Max level is {custom_subjects.subjects[subject].levels}, not {level}. :x:')
 
-        elif question not in custom_subjects.quests[subject][subject + ' level ' + level]['questions'].keys():
+        elif question not in custom_subjects.quests[subject][subject + ' level ' + str(level)]['questions'].keys():
             await ctx.send('Question does not exist. :x:')
 
         else:

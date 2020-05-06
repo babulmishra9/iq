@@ -17,7 +17,7 @@ def new_user(id_, name, subject, subject_ranks):
         'username': name,
         'subject': subject,
         'subject-class': custom_subjects.subjects[subject],
-        'subject-level': subject,
+        'subject-level': subject + ' level 1',
         'subject-ranks': subject_ranks,
         'points': 0,
         'major-points': 0,

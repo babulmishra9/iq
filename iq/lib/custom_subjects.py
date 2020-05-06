@@ -66,13 +66,9 @@ class Subject:
 
     def __make_subject_dict(self):
         subject_dict = {}
-        ranks = [self.name]
+        ranks = []
 
-        levels = range(2, self.levels + 1)
-
-        subject_dict[self.name] = {
-            'questions': {}
-        }
+        levels = range(1, self.levels + 1)
 
         for level in levels:
             level_name = self.name + ' level ' + str(level)
